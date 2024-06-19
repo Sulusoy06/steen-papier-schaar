@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steen, Papier, Schaar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0f7fa;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #00796b;
+            margin-top: 20px;
+            flex-shrink: 0;
+        }
+
+        .button-container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+        }
+
+        button {
+            flex: 1;
+            font-size: 2em;
+            padding: 20px;
+            margin: 0;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:nth-child(1) {
+            background-color: #ff5722;
+        }
+
+        button:nth-child(2) {
+            background-color: #4caf50;
+        }
+
+        button:nth-child(3) {
+            background-color: #2196f3;
+        }
+
+        button:hover {
+            background-color: #004d40;
+            transform: scale(1.05);
+        }
+
+        .result-container {
+            text-align: center;
+            background-color: #00796b;
+            color: white;
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 1.5em;
+        }
+
+        #result {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffeb3b;
+            margin-top: 20px;
+        }
+
+        .icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .win-effect {
+            color: #ffeb3b;
+            text-shadow: 0 0 10px #ffeb3b;
+            animation: win-animation 1s infinite;
+        }
+
+        @keyframes win-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Steen, Papier, Schaar</h1>
+    <div class="button-container">
+        <button id="rock"><i class="fas fa-hand-rock icon"></i> Steen</button>
+        <button id="paper"><i class="fas fa-hand-paper icon"></i> Papier</button>
+        <button id="scissors"><i class="fas fa-hand-scissors icon"></i> Schaar</button>
+    </div>
+    <div class="result-container">
+        <p>Jouw keuze: <span id="human-choice"></span></p>
+        <p>Computer keuze: <span id="computer-choice"></span></p>
+        <h2 id="result"></h2>
+    </div>
+    <audio id="win-sound" src="https://www.soundjay.com/button/sounds/button-3.mp3"></audio>
+    <audio id="lose-sound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+    <audio id="draw-sound" src="https://www.soundjay.com/button/sounds/button-4.mp3"></audio>
+
+    <script>
+        const rockButton = document.getElementById("rock");
+        const paperButton = document.getElementById("paper");
+        const scissorsButton = document.getElementById("scissors");
+        const humanChoiceDisplay = document.getElementById("human-choice");
+        const computerChoiceDisplay = document.getElementById("computer-choice");
+        const resultDisplay = document.getElementById("result");
+        const winSound = document.getElementById("win-sound");
+        const loseSound = document.getElementById("lose-sound");
+        const drawSound = document.getElementById("draw-sound");
+
+        let humanChoice;
+        let computerChoice;
+
+        rockButton.addEventListener("click", () => {
+            humanChoice = "Steen";
+            humanChoiceDisplay.textContent = humanChoice;
+            generateComputerChoice();
+            determineWinner();
+        });
+
+        paperButton.addEventListener("click", () => {
+            humanChoice = "Papier";
+            humanChoiceDisplay.textContent = humanChoice;
+            generateComputerChoice();
+            determineWinner();
+        });
+
+        scissorsButton.addEventListener("click", () => {
+            humanChoice = "Schaar";
+            humanChoiceDisplay.textContent = humanChoice;
+            generateComputerChoice();
+            determineWinner();
+        });
+
+        function generateComputerChoice() {
+            const choices = ["Steen", "Papier", "Schaar"];
+            const randomIndex = Math.floor(Math.random() * 3);
+            computerChoice = choices[randomIndex];
+            computerChoiceDisplay.textContent = computerChoice;
+        }
+
+        function determineWinner() {
+            if (humanChoice === computerChoice) {
+                resultDisplay.textContent = "Gelijkspel!";
+                resultDisplay.className = "";
+                drawSound.play();
+            } else if (
+                (humanChoice === "Steen" && computerChoice === "Schaar") ||
+                (humanChoice === "Papier" && computerChoice === "Steen") ||
+                (humanChoice === "Schaar" && computerChoice === "Papier")
+            ) {
+                resultDisplay.textContent = "Je wint!";
+                resultDisplay.className = "win-effect";
+                winSound.play();
+            } else {
+                resultDisplay.textContent = "Computer wint!";
+                resultDisplay.className = "";
+                loseSound.play();
+            }
+        }
+    </script>
+</body>
+</html>
